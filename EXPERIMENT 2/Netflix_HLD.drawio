@@ -1,0 +1,285 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0">
+  <diagram id="netflix-student-hld" name="Netflix System Design (Experiment 2)">
+    <mxGraphModel dx="2943" dy="1640" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="main_title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#D1D5DB;strokeWidth=2;align=center;verticalAlign=middle;" value="&lt;b style=&quot;font-size: 22px; color: rgb(229, 9, 20);&quot;&gt;SYSTEM DESIGN EXPERIMENT 2: HIGH-LEVEL DESIGN (HLD) OF NETFLIX&lt;/b&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="2130" x="35" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="sec1_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=12;" value="&lt;b style=&quot;font-size: 15px; color: rgb(30, 58, 138);&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 1. REQUIREMENTS (FUNCTIONAL &amp;amp; NON-FUNCTIONAL)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="500" width="530" x="30" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sec1_fr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#93C5FD;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&#39;font-size: 13px; color: #1E40AF;&#39;&gt;A. Functional Requirements (What the system must DO):&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;Video Streaming:&lt;/b&gt; Users should be able to play/stream videos smoothly without buffering.&lt;br&gt;• &lt;b&gt;Adaptive Bitrate (ABR):&lt;/b&gt; Video quality automatically adjusts (360p, 480p, 720p, 1080p, 4K) based on user&#39;s internet speed.&lt;br&gt;• &lt;b&gt;Search &amp;amp; Discovery:&lt;/b&gt; Users can search movies/shows by title, genre, language, or actors, and browse the homepage.&lt;br&gt;• &lt;b&gt;Continue Watching (Playback State):&lt;/b&gt; System must remember watch history and exact timestamp so user can resume anytime on any device.&lt;br&gt;• &lt;b&gt;User Accounts &amp;amp; Profiles:&lt;/b&gt; Sign up, login, subscription plans, and multiple viewer profiles per account.&lt;br&gt;• &lt;b&gt;Video Upload &amp;amp; Transcoding (Admin/Creator):&lt;/b&gt; Admins/studios can upload new movies which are automatically converted into different formats/resolutions." vertex="1">
+          <mxGeometry height="210" width="500" x="45" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="sec1_nfr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#93C5FD;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&#39;font-size: 13px; color: #1E40AF;&#39;&gt;B. Non-Functional Requirements (System Quality &amp;amp; Performance):&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;High Availability (99.99%):&lt;/b&gt; Streaming service must always be online. If recommendations fail, video playback must still work.&lt;br&gt;• &lt;b&gt;Low Latency (Fast Start):&lt;/b&gt; Video should start playing within &amp;lt; 1 second of pressing &#39;Play&#39; (minimal buffering).&lt;br&gt;• &lt;b&gt;Scalability:&lt;/b&gt; System must easily handle traffic spikes when a popular movie/series releases (millions of concurrent users).&lt;br&gt;• &lt;b&gt;Reliability &amp;amp; Fault Tolerance:&lt;/b&gt; No single point of failure (SPOF). If one server or database crashes, traffic routes to another.&lt;br&gt;• &lt;b&gt;Data Consistency:&lt;/b&gt;&lt;br&gt;  - &lt;i&gt;Strong Consistency:&lt;/i&gt; For user account, billing, and payment records.&lt;br&gt;  - &lt;i&gt;Eventual Consistency:&lt;/i&gt; For watch history, ratings, and view counts." vertex="1">
+          <mxGeometry height="210" width="500" x="45" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=12;" value="&lt;b style=&quot;font-size: 15px; color: rgb(124, 45, 18);&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;2. BACK OF THE ENVELOPE (BOE) ESTIMATION&lt;/b&gt;" vertex="1">
+          <mxGeometry height="865" width="530" x="30" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_card1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCD34D;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&#39;font-size: 13px; color: #9A3412;&#39;&gt;A. Traffic &amp;amp; Active Users Assumptions:&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;Total Registered Subscribers:&lt;/b&gt; 250 Million&lt;br&gt;• &lt;b&gt;Daily Active Users (DAU):&lt;/b&gt; ~50 Million users/day (20% of total)&lt;br&gt;• &lt;b&gt;Peak Concurrent Viewers:&lt;/b&gt; ~10 Million streams at peak evening hours&lt;br&gt;• &lt;b&gt;Average Watch Time:&lt;/b&gt; 2 hours per active user per day" vertex="1">
+          <mxGeometry height="110" width="500" x="45" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_card2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCD34D;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&quot;font-size: 13px; color: rgb(154, 52, 18);&quot;&gt;B. Storage Estimation (Video Files &amp;amp; Metadata):&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;Total Movie &amp;amp; Series Catalog:&lt;/b&gt; 10,000 titles&lt;br&gt;• &lt;b&gt;Raw Master File Size:&lt;/b&gt; ~30 GB per title (high quality studio master)&lt;br&gt;• &lt;b&gt;Multiple Resolutions &amp;amp; Formats:&lt;/b&gt;&lt;br&gt;  - 1080p (FHD): ~2.5 GB&lt;br&gt;  - 720p (HD): ~1.2 GB&lt;br&gt;  - 480p (SD): ~600 MB&lt;br&gt;  - 360p (Mobile): ~300 MB&lt;br&gt;  - Audio tracks &amp;amp; subtitles in multiple languages: ~400 MB&lt;br&gt;  • &lt;b&gt;Total Transcoded Size per Title:&lt;/b&gt; ~5 GB&lt;br&gt;• &lt;b&gt;Total Video Storage Needed:&lt;/b&gt;&lt;br&gt;  10,000 titles × 5 GB = 50,000 GB = &lt;b style=&quot;color: rgb(180, 83, 9);&quot;&gt;50 TB (Terabytes)&lt;/b&gt;&lt;br&gt;• &lt;b&gt;With Backup &amp;amp; Replication (3 regions):&lt;/b&gt; 50 TB × 3 = &lt;b&gt;150 TB in S3&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;User Metadata Storage (Database):&lt;/b&gt;&lt;br&gt;  - User profile, settings, preferences: ~2 KB&lt;br&gt;  - Watch history &amp;amp; bookmarks: ~8 KB&lt;br&gt;  - Total per user = ~10 KB&lt;br&gt;  - Total DB Size: 250M users × 10 KB = &lt;b style=&quot;color: rgb(180, 83, 9);&quot;&gt;2.5 TB&amp;nbsp;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="305" width="500" x="45" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_card3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCD34D;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&#39;font-size: 13px; color: #9A3412;&#39;&gt;C. Bandwidth &amp;amp; Network Egress Estimation:&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;Average Stream Bitrate:&lt;/b&gt; 2.5 Mbps (blended average of mobile &amp;amp; HD streams)&lt;br&gt;• &lt;b&gt;Peak Concurrent Streams:&lt;/b&gt; 10,000,000 active streams&lt;br&gt;• &lt;b&gt;Total Peak Bandwidth Egress:&lt;/b&gt;&lt;br&gt;  10,000,000 users × 2.5 Mbps = 25,000,000 Mbps = &lt;b style=&#39;color:#B45309;&#39;&gt;25 Tbps (Terabits/sec)&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;i style=&#39;color:#78350F;&#39;&gt;Key Takeaway:&lt;/i&gt; Standard cloud servers CANNOT handle 25 Tbps directly without crashing!&lt;br&gt;  Hence, &lt;b&gt;CDN (Content Delivery Network / Open Connect)&lt;/b&gt; is required.&lt;br&gt;  CDN edge caches handle &lt;b&gt;&amp;gt;95% of video bandwidth&lt;/b&gt; locally at ISP level!" vertex="1">
+          <mxGeometry height="160" width="500" x="45" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="sec2_card4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCD34D;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=12;spacingTop=10;fontSize=11;" value="&lt;b style=&#39;font-size: 13px; color: #9A3412;&#39;&gt;D. Requests Per Second (QPS) Estimation:&lt;/b&gt;&lt;br&gt;&lt;br&gt;• &lt;b&gt;Search &amp;amp; Browsing API Requests:&lt;/b&gt;&lt;br&gt;  - 50M DAU × 10 clicks/searches per day = 500,000,000 requests/day&lt;br&gt;  - Average QPS = 500,000,000 / 86,400 seconds ≈ &lt;b&gt;5,800 QPS&lt;/b&gt;&lt;br&gt;  - Peak QPS (2x average) ≈ &lt;b style=&#39;color:#B45309;&#39;&gt;12,000 QPS&lt;/b&gt;&lt;br&gt;• &lt;b&gt;Playback Heartbeat Beacons:&lt;/b&gt;&lt;br&gt;  - 10M concurrent streams send a progress beacon every 10 seconds&lt;br&gt;  - Heartbeat QPS = 10,000,000 / 10s = &lt;b style=&#39;color:#B45309;&#39;&gt;1,000,000 QPS&lt;/b&gt;&lt;br&gt;  - Ingested via lightweight &lt;b&gt;Kafka cluster&lt;/b&gt; so web servers aren&#39;t overloaded." vertex="1">
+          <mxGeometry height="175" width="500" x="45" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="iSXXC790EoFp7RAx_GNQ-3" edge="1" parent="1" source="sec3_container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1369.5" y="100.00000000000011" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sec3_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#10B981;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=12;" value="&lt;b style=&quot;font-size: 15px; color: rgb(6, 95, 70);&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 3. SYSTEM COMPONENTS USED &amp;amp; THEIR ROLES&lt;/b&gt;" vertex="1">
+          <mxGeometry height="305" width="1580" x="580" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_client" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&#39;color:#065F46; font-size:12px;&#39;&gt;1. Client Devices&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;• Smart TV, Mobile, Web Browser&lt;br&gt;• Displays UI &amp;amp; Movie catalog&lt;br&gt;• Runs ABR logic (switches quality dynamically based on Wi-Fi speed)&lt;br&gt;• Decrypts protected video streams&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="600" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_dns" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&#39;color:#065F46; font-size:12px;&#39;&gt;2. DNS &amp;amp; Load Balancer&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;• &lt;b&gt;DNS (Route 53):&lt;/b&gt; Directs user to nearest data center based on geo-location.&lt;br&gt;• &lt;b&gt;Load Balancer (Nginx/ALB):&lt;/b&gt; Distributes incoming API traffic equally across backend servers to prevent overload.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="860" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_gw" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&quot;color: rgb(6, 95, 70); font-size: 12px;&quot;&gt;3. API Gateway&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: rgb(55, 65, 81);&quot;&gt;• Single entry point for all mobile &amp;amp; TV client requests.&lt;br&gt;• Verifies user authentication (JWT).&lt;br&gt;• Rate limiting (stops spam/DDoS).&lt;br&gt;• Routes requests to appropriate microservice.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="1120" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_micro" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&#39;color:#065F46; font-size:12px;&#39;&gt;4. Backend Microservices&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;• &lt;b&gt;Auth Service:&lt;/b&gt; Login, Signup, Passwords.&lt;br&gt;• &lt;b&gt;User Service:&lt;/b&gt; Profiles, Subscriptions.&lt;br&gt;• &lt;b&gt;Catalog Service:&lt;/b&gt; Movie metadata &amp;amp; Search.&lt;br&gt;• &lt;b&gt;Playback Service:&lt;/b&gt; Generates video link &amp;amp; finds closest CDN server.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="1380" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_trans" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&#39;color:#065F46; font-size:12px;&#39;&gt;5. Transcoding Pipeline&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;• Chunks raw movie files into 2-5 sec pieces.&lt;br&gt;• Encodes chunks into H.264, H.265, AV1.&lt;br&gt;• Creates 360p, 480p, 720p, 1080p, 4K.&lt;br&gt;• Generates Manifest (.mpd / .m3u8) file so client can switch bitrates.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="1640" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_cdn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.5;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" value="&lt;b style=&#39;color:#065F46; font-size:12px;&#39;&gt;6. CDN (Open Connect)&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;• Dedicated edge cache servers placed physically inside local ISPs (Airtel, Jio, Comcast).&lt;br&gt;• Stores popular video chunks near user.&lt;br&gt;• Streams 95%+ of video data directly without touching the central cloud!&lt;/span&gt;" vertex="1">
+          <mxGeometry height="115" width="240" x="1900" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_db_sql" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.2;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;" value="&lt;b style=&#39;color:#065F46; font-size:11px;&#39;&gt;MySQL / Relational DB (RDBMS)&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;Used for &lt;b&gt;Billing, Payments &amp;amp; Subscriptions&lt;/b&gt;. Guarantees strict ACID properties and data consistency (no double billing).&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85" width="370" x="600" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_db_nosql" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.2;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;" value="&lt;b style=&#39;color:#065F46; font-size:11px;&#39;&gt;NoSQL DB (Cassandra / MongoDB)&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;Used for &lt;b&gt;User Watch History &amp;amp; Bookmarks&lt;/b&gt;. Fast write throughput for billions of viewing timestamps partitioned by User ID.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85" width="370" x="990" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_db_redis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.2;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;" value="&lt;b style=&#39;color:#065F46; font-size:11px;&#39;&gt;In-Memory Cache (Redis)&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;Caches &lt;b&gt;Trending Movies &amp;amp; User Profiles&lt;/b&gt;. Provides sub-millisecond read response times and reduces database load by 80%.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85" width="370" x="1380" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="comp_db_s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1.2;align=left;verticalAlign=top;spacingLeft=8;spacingTop=6;" value="&lt;b style=&#39;color:#065F46; font-size:11px;&#39;&gt;Object Storage (AWS S3)&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px; color:#374151;&#39;&gt;Stores &lt;b&gt;Raw Master Videos &amp;amp; Encoded Chunks&lt;/b&gt;. Highly durable, infinite cloud storage; serves as the master source for CDNs.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="85" width="370" x="1770" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="sec4_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF2FF;strokeColor=#6366F1;strokeWidth=2;verticalAlign=top;align=left;spacingLeft=15;spacingTop=12;arcSize=21;" value="&lt;b style=&quot;font-size: 15px; color: rgb(67, 56, 202);&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;4. HIGH-LEVEL ARCHITECTURE DIAGRAM &amp;amp; END-TO-END SYSTEM FLOWS&lt;/b&gt;" vertex="1">
+          <mxGeometry height="590" width="1580" x="580" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="box_clients" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#3B82F6;strokeWidth=1.5;verticalAlign=top;align=center;spacingTop=6;" value="&lt;div&gt;&lt;b style=&quot;font-size: 13px; color: rgb(30, 58, 138);&quot;&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;b style=&quot;font-size: 13px; color: rgb(30, 58, 138);&quot;&gt;CLIENT TIER&lt;/b&gt;" vertex="1">
+          <mxGeometry height="420" width="220" x="600" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="node_client_tv" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;" value="&lt;b&gt;Smart TV Client&lt;/b&gt;&lt;br&gt;(Living Room Streaming)&lt;br&gt;&lt;i&gt;4K / 1080p Playback&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="180" x="620" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="node_client_mob" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;" value="&lt;b&gt;Mobile App&lt;/b&gt;&lt;br&gt;(iOS / Android)&lt;br&gt;&lt;i&gt;Dynamic ABR (Cellular/Wi-Fi)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="180" x="618" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="node_client_web" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;strokeWidth=1.5;" value="&lt;b&gt;Web Browser / Laptop&lt;/b&gt;&lt;br&gt;(Chrome, Firefox, Safari)&lt;br&gt;&lt;i&gt;HTML5 Video &amp;amp; DRM EME&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="180" x="618" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="node_client_admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;" value="&lt;b&gt;Content Creator / Studio&lt;/b&gt;&lt;br&gt;(Production Admin Portal)&lt;br&gt;&lt;i&gt;Uploads Raw Master Videos&lt;/i&gt;" vertex="1">
+          <mxGeometry height="85" width="180" x="618" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="box_edge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EDE9FE;strokeColor=#7C3AED;strokeWidth=1.5;verticalAlign=top;align=center;spacingTop=6;" value="&lt;b style=&#39;font-size: 13px; color: #4C1D95;&#39;&gt;GATEWAY &amp;amp; TRAFFIC&lt;/b&gt;" vertex="1">
+          <mxGeometry height="420" width="210" x="870" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="node_lb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.2;" value="&lt;b&gt;Load Balancer (ALB)&lt;/b&gt;&lt;br&gt;Distributes requests" vertex="1">
+          <mxGeometry height="50" width="170" x="890" y="713" as="geometry" />
+        </mxCell>
+        <mxCell id="node_zuul" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DDD6FE;strokeColor=#6D28D9;strokeWidth=1.8;" value="&lt;b&gt;API Gateway&lt;br&gt;(Netflix Zuul)&lt;/b&gt;&lt;br&gt;• Auth Token Verification&lt;br&gt;• Rate Limiting&lt;br&gt;• Request Routing" vertex="1">
+          <mxGeometry height="110" width="170" x="890" y="815" as="geometry" />
+        </mxCell>
+        <mxCell id="box_backend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D1FAE5;strokeColor=#059669;strokeWidth=1.5;verticalAlign=top;align=center;spacingTop=6;" value="&lt;b style=&quot;font-size: 13px; color: rgb(6, 95, 70);&quot;&gt;BACKEND MICROSERVICES &lt;br&gt;(AWS CLOUD)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="420" width="280" x="1130" y="525" as="geometry" />
+        </mxCell>
+        <mxCell id="node_srv_auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.2;" value="&lt;b&gt;Auth &amp;amp; User Service&lt;/b&gt;&lt;br&gt;User login, signup, JWT tokens" vertex="1">
+          <mxGeometry height="50" width="240" x="1150" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="node_srv_catalog" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.2;" value="&lt;b&gt;Catalog &amp;amp; Search Service&lt;/b&gt;&lt;br&gt;Movie titles, cast, genres, search" vertex="1">
+          <mxGeometry height="50" width="240" x="1150" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="node_srv_play" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A7F3D0;strokeColor=#047857;strokeWidth=2;" value="&lt;b&gt;Streaming / Playback Service&lt;/b&gt;&lt;br&gt;• Generates Manifest (.mpd/.m3u8)&lt;br&gt;• Finds nearest CDN Edge Server" vertex="1">
+          <mxGeometry height="65" width="240" x="1150" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="node_srv_state" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.2;" value="&lt;b&gt;User State &amp;amp; History Service&lt;/b&gt;&lt;br&gt;Tracks &#39;Continue Watching&#39; timestamp" vertex="1">
+          <mxGeometry height="50" width="240" x="1150" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="node_srv_billing" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10B981;strokeWidth=1.2;" value="&lt;b&gt;Billing &amp;amp; Subscription Service&lt;/b&gt;&lt;br&gt;Payment gateway, renewal, plan tiers" vertex="1">
+          <mxGeometry height="50" width="240" x="1150" y="875" as="geometry" />
+        </mxCell>
+        <mxCell id="box_storage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#9CA3AF;strokeWidth=1.5;verticalAlign=top;align=center;spacingTop=6;" value="&lt;b style=&#39;font-size: 13px; color: #1F2937;&#39;&gt;DATABASES &amp;amp; CACHE&lt;/b&gt;" vertex="1">
+          <mxGeometry height="420" width="280" x="1450" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="node_db_cache" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6B7280;strokeWidth=1.2;" value="&lt;b&gt;Redis Cache Cluster&lt;/b&gt;&lt;br&gt;Caches trending movies &amp;amp; sessions" vertex="1">
+          <mxGeometry height="50" width="240" x="1470" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="node_db_sql" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6B7280;strokeWidth=1.2;" value="&lt;b&gt;MySQL Database (ACID)&lt;/b&gt;&lt;br&gt;User credentials, accounts, billing" vertex="1">
+          <mxGeometry height="50" width="240" x="1470" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="node_db_nosql" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6B7280;strokeWidth=1.2;" value="&lt;b&gt;Cassandra / MongoDB&lt;/b&gt;&lt;br&gt;Watch history, timestamps, ratings" vertex="1">
+          <mxGeometry height="50" width="240" x="1470" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="node_db_kafka" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E5E7EB;strokeColor=#4B5563;strokeWidth=1.5;" value="&lt;b&gt;Kafka Message Queue&lt;/b&gt;&lt;br&gt;Async ingestion of 1M QPS heartbeats" vertex="1">
+          <mxGeometry height="50" width="240" x="1470" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="node_db_s3_trans" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;" value="&lt;b&gt;AWS S3 (Encoded Chunks)&lt;/b&gt;&lt;br&gt;Master repository of all video segments" vertex="1">
+          <mxGeometry height="60" width="240" x="1470" y="845" as="geometry" />
+        </mxCell>
+        <mxCell id="box_cdn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#EF4444;strokeWidth=2;verticalAlign=top;align=center;spacingTop=6;" value="&lt;b style=&#39;font-size: 13px; color: #991B1B;&#39;&gt;NETFLIX OPEN CONNECT (CDN)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="420" width="340" x="1790" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="node_cdn_isp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#DC2626;strokeWidth=2;align=left;spacingLeft=10;" value="&lt;b&gt;Open Connect Appliance (OCA)&lt;/b&gt;&lt;br&gt;&lt;b style=&#39;color:#B91C1C;&#39;&gt;Deployed inside Local ISP (Jio / Airtel)&lt;/b&gt;&lt;br&gt;• Physically located in user&#39;s city/ISP&lt;br&gt;• High-speed SSDs with popular videos&lt;br&gt;• Delivers 95%+ of video data locally&lt;br&gt;• Eliminates lag and buffering!" vertex="1">
+          <mxGeometry height="115" width="300" x="1810" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="node_cdn_nightly" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#F87171;strokeWidth=1;align=left;spacingLeft=8;fontSize=10;" value="&lt;b&gt;Proactive Nightly Caching (Fill)&lt;/b&gt;&lt;br&gt;During night (2 AM - 5 AM), the CDN pre-downloads anticipated hit movies from AWS S3 so they are ready for evening rush!" vertex="1">
+          <mxGeometry height="65" width="300" x="1810" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="node_cdn_abr" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;strokeWidth=1;align=left;spacingLeft=8;fontSize=10;" value="&lt;b&gt;How Video Reaches Client:&lt;/b&gt;&lt;br&gt;Videos are stored in 2 to 5-second chunks. The client&#39;s video player requests chunk 1, chunk 2, chunk 3 directly from this OCA via HTTPS!" vertex="1">
+          <mxGeometry height="65" width="300" x="1810" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="box_trans_pipeline" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;" value="&lt;b style=&#39;font-size: 13px; color: #92400E;&#39;&gt;OFFLINE VIDEO INGESTION &amp;amp; TRANSCODING PIPELINE (HOW A NEW MOVIE IS ADDED)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="145" width="1530" x="600" y="1055" as="geometry" />
+        </mxCell>
+        <mxCell id="step_t1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;align=center;" value="&lt;b&gt;[Step 1] Upload Master&lt;/b&gt;&lt;br&gt;Studio uploads 4K raw master video (30-50GB) to S3" vertex="1">
+          <mxGeometry height="55" width="240" x="620" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="step_t2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;align=center;" value="&lt;b&gt;[Step 2] Chunking&lt;/b&gt;&lt;br&gt;Master video is sliced into parallel 2-to-5 second chunks" vertex="1">
+          <mxGeometry height="55" width="240" x="900" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="step_t3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;align=center;" value="&lt;b&gt;[Step 3] Multi-Encoding&lt;/b&gt;&lt;br&gt;Transcoder converts chunks to 360p, 480p, 720p, 1080p, 4K" vertex="1">
+          <mxGeometry height="55" width="260" x="1200" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="step_t4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;align=center;" value="&lt;b&gt;[Step 4] DRM &amp;amp; Manifest&lt;/b&gt;&lt;br&gt;Chunks encrypted; .mpd/.m3u8 index file created and saved in S3" vertex="1">
+          <mxGeometry height="55" width="270" x="1520" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="step_t5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDE68A;strokeColor=#B45309;strokeWidth=1.5;align=center;" value="&lt;b&gt;[Step 5] CDN Push&lt;/b&gt;&lt;br&gt;Pushed to global ISP CDN servers ahead of release!" vertex="1">
+          <mxGeometry height="55" width="260" x="1840" y="1110" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_t1" edge="1" parent="1" source="step_t1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;" target="step_t2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_t2" edge="1" parent="1" source="step_t2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;" target="step_t3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_t3" edge="1" parent="1" source="step_t3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;" target="step_t4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arr_t4" edge="1" parent="1" source="step_t4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;" target="step_t5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note_trans" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontColor=#78350F;" value="&lt;i&gt;Why Transcoding is necessary:&lt;/i&gt; Different users have different screens (4-inch mobile vs 65-inch 4K TV) and different connection speeds (2G, 4G, Fiber Wi-Fi). Storing multiple encoded versions allows the client to switch quality on the fly!" vertex="1">
+          <mxGeometry height="30" width="1470" x="750" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="box_flows_desc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#94A3B8;strokeWidth=1.5;verticalAlign=top;align=left;spacingLeft=15;spacingTop=8;" value="&lt;b style=&#39;font-size: 13px; color: #1E293B;&#39;&gt;STEP-BY-STEP USER WORKFLOWS (HOW THE SYSTEM CONNECTS TOGETHER)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="196.25" width="1530" x="600" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_step1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#93C5FD;strokeWidth=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fontSize=11;" value="&lt;b style=&quot;color: rgb(29, 78, 216); font-size: 12px;&quot;&gt;FLOW 1: Browse &amp;amp; Search Flow&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;1.&lt;/b&gt; User opens Netflix app &amp;amp; searches or opens home feed.&lt;br&gt;&lt;b&gt;2.&lt;/b&gt; Request passes through &lt;b&gt;DNS&lt;/b&gt; and &lt;b&gt;Load Balancer&lt;/b&gt; to&amp;nbsp;&lt;b&gt;API Gateway&lt;/b&gt;.&lt;br&gt;&lt;b&gt;3.&lt;/b&gt; Gateway verifies JWT token and calls &lt;b&gt;Catalog Service&lt;/b&gt;.&lt;br&gt;&lt;b&gt;4.&lt;/b&gt; Catalog Service checks &lt;b&gt;Redis Cache&lt;/b&gt;. On cache hit, returns in &amp;lt;5ms. If cache miss, reads from database and updates Redis.&lt;br&gt;&lt;b&gt;5.&lt;/b&gt; User sees movie posters and list." vertex="1">
+          <mxGeometry height="145" width="460" x="610" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_step2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6EE7B7;strokeWidth=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fontSize=11;" value="&lt;b style=&#39;color:#047857; font-size:12px;&#39;&gt;FLOW 2: Video Playback Initiation Flow&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;1.&lt;/b&gt; User clicks &lt;b style=&#39;color:#E50914;&#39;&gt;PLAY&lt;/b&gt; on a movie.&lt;br&gt;&lt;b&gt;2.&lt;/b&gt; Client sends request to &lt;b&gt;Playback Service&lt;/b&gt; via API Gateway.&lt;br&gt;&lt;b&gt;3.&lt;/b&gt; Playback Service checks user subscription in &lt;b&gt;MySQL&lt;/b&gt; and fetches resume timestamp from &lt;b&gt;Cassandra&lt;/b&gt;.&lt;br&gt;&lt;b&gt;4.&lt;/b&gt; Playback Service determines user&#39;s ISP &amp;amp; IP and selects the &lt;b&gt;closest Open Connect CDN server (OCA)&lt;/b&gt;.&lt;br&gt;&lt;b&gt;5.&lt;/b&gt; Returns a &lt;b&gt;Manifest (.mpd)&lt;/b&gt; containing CDN URLs to the client." vertex="1">
+          <mxGeometry height="145" width="480" x="1100" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_step3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FCA5A5;strokeWidth=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fontSize=11;" value="&lt;b style=&#39;color:#B91C1C; font-size:12px;&#39;&gt;FLOW 3: Real-Time Video Streaming &amp;amp; State Sync&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;1.&lt;/b&gt; Client bypasses cloud backend and connects &lt;b&gt;directly to ISP Open Connect CDN&lt;/b&gt;!&lt;br&gt;&lt;b&gt;2.&lt;/b&gt; Client requests 2-to-5 second video chunks via HTTPS.&lt;br&gt;&lt;b&gt;3.&lt;/b&gt; If network slows down, client player automatically requests smaller 480p chunks (Adaptive Bitrate - ABR).&lt;br&gt;&lt;b&gt;4.&lt;/b&gt; Every 10 seconds, client sends a lightweight heartbeat to &lt;b&gt;Kafka&lt;/b&gt; to save viewing progress in &lt;b&gt;Cassandra&lt;/b&gt; (Continue Watching)." vertex="1">
+          <mxGeometry height="145" width="490" x="1620" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="conn_c_gw" edge="1" parent="1" source="node_client_mob" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2563EB;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="node_zuul" value="[1] API Request (HTTPS)">
+          <mxGeometry relative="1" x="0.4715" as="geometry">
+            <mxPoint x="-1" as="offset" />
+            <Array as="points">
+              <mxPoint x="844" y="720" />
+              <mxPoint x="844" y="980" />
+              <mxPoint x="975" y="980" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_gw_play" edge="1" parent="1" source="node_zuul" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#059669;strokeWidth=2;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="node_srv_play" value="[2] Route Request">
+          <mxGeometry relative="1" x="-0.5568" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1017.53" y="980.06" />
+              <mxPoint x="1090" y="980.06" />
+              <mxPoint x="1090" y="762.53" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_play_db" edge="1" parent="1" source="node_srv_play" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4B5563;strokeWidth=1.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="node_db_nosql" value="[3] Get Bookmark / Check Plan">
+          <mxGeometry relative="1" x="0.0688" y="10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1430.08" y="762.52" />
+              <mxPoint x="1430.08" y="490.04" />
+              <mxPoint x="1440.08" y="490.04" />
+              <mxPoint x="1440.08" y="725" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_play_manifest" edge="1" parent="1" source="node_dns" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#059669;strokeWidth=2;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.2;entryDx=0;entryDy=0;" target="node_client_tv" value="[4] Return Video Manifest (.mpd) + Closest CDN OCA URL">
+          <mxGeometry relative="1" x="0.0577" y="-10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1017.5" y="620.08" />
+              <mxPoint x="1050.08" y="620.08" />
+              <mxPoint x="1050.08" y="500" />
+              <mxPoint x="800" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_client_cdn" edge="1" parent="1" source="node_cdn_isp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#DC2626;strokeWidth=3.5;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="node_client_tv" value="[5] DIRECT 1080p/4K VIDEO STREAMING VIA HTTPS (Bypasses AWS Cloud entirely!)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1770.08" y="632.54" />
+              <mxPoint x="1770.08" y="1000.08" />
+              <mxPoint x="830.08" y="1000.08" />
+              <mxPoint x="830.08" y="640.08" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_telem" edge="1" parent="1" source="node_client_mob" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6B7280;strokeWidth=1.5;dashed=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="node_db_kafka" value="[6] Periodic Heartbeat Progress (every 10s)">
+          <mxGeometry relative="1" x="0.3358" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="850" y="738.06" />
+              <mxPoint x="850" y="790.06" />
+              <mxPoint x="1110" y="790.06" />
+              <mxPoint x="1110" y="970.06" />
+              <mxPoint x="1430.12" y="970.06" />
+              <mxPoint x="1430.12" y="805" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn_s3_cdn" edge="1" parent="1" source="node_db_s3_trans" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="node_cdn_nightly" value="Nightly Video Pre-fill">
+          <mxGeometry relative="1" x="0.4776" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1750.07" y="875" />
+              <mxPoint x="1750.07" y="810.07" />
+              <mxPoint x="1960.07" y="810.07" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iSXXC790EoFp7RAx_GNQ-2" edge="1" parent="1" source="sec1_container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.124;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" target="main_title">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iSXXC790EoFp7RAx_GNQ-4" edge="1" parent="1" source="node_srv_play" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#059669;strokeWidth=2;exitX=0;exitY=0.2;exitDx=0;exitDy=0;entryX=1;entryY=0.2;entryDx=0;entryDy=0;" target="node_dns" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1150" y="653" as="sourcePoint" />
+            <mxPoint x="800" y="622" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="node_dns" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#8B5CF6;strokeWidth=1.2;" value="&lt;b&gt;DNS (Route 53)&lt;/b&gt;&lt;br&gt;Geo-location routing" vertex="1">
+          <mxGeometry height="50" width="170" x="890" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="iSXXC790EoFp7RAx_GNQ-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="MADE BY DIVYANSHU(24BCS10223)" vertex="1">
+          <mxGeometry height="60" width="1530" x="600" y="1430" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
